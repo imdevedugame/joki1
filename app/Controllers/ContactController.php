@@ -2,7 +2,7 @@
 
 namespace App\Controllers;
 
-use App\controllers\BaseController;
+
 use CodeIgniter\HTTP\ResponseInterface;
 
 class ContactController extends BaseController{

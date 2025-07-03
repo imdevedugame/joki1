@@ -53,38 +53,40 @@ class LaporanPeriodikController extends BaseController
             'tanggal_akhir' => $tanggal_akhir
         ]);
     }
+public function export_pdf()
+{
+    $awal = $this->request->getGet('tanggal_awal');
+    $akhir = $this->request->getGet('tanggal_akhir');
 
-    public function export_pdf()
-    {
-        $awal = $this->request->getGet('tanggal_awal');
-        $akhir = $this->request->getGet('tanggal_akhir');
+    $data = $this->transaksiModel
+        ->where('created_at >=', $awal)
+        ->where('created_at <=', $akhir)
+        ->findAll();
 
-        $data = $this->transaksiModel
-            ->where('created_at >=', $awal)
-            ->where('created_at <=', $akhir)
-            ->findAll();
-
-        foreach ($data as &$row) {
-            $jumlah = $this->detailModel
-                ->where('transaction_id', $row['id']) // pastikan ini kolom foreign key di detail
-                ->selectSum('jumlah')
-                ->first();
-
-            $row['jumlah_barang'] = $jumlah['jumlah'] ?? 0;
-        }
-
-        $html = view('admin/v_laporan_periodik_pdf', [
-            'laporan' => $data,
-            'awal' => $awal,
-            'akhir' => $akhir
-        ]);
-
-        // Cetak PDF
-        $dompdf = new Dompdf();
-        $dompdf->loadHtml($html);
-        $dompdf->render();
-        $dompdf->stream('laporan_periodik.pdf', ['Attachment' => false]);
+    foreach ($data as &$row) {
+        $jumlah = $this->detailModel
+            ->where('transaction_id', $row['id'])
+            ->selectSum('jumlah')
+            ->first();
+        $row['jumlah_barang'] = $jumlah['jumlah'] ?? 0;
     }
+
+    $html = view('admin/v_laporan_periodik_pdf', [
+        'laporan' => $data,
+        'awal' => $awal,
+        'akhir' => $akhir
+    ]);
+
+    $dompdf = new \Dompdf\Dompdf();
+    $dompdf->loadHtml($html);
+    $dompdf->setPaper('A4', 'portrait');
+    $dompdf->render();
+
+    ob_clean();
+    flush();
+    $dompdf->stream('laporan_periodik.pdf', ['Attachment' => false]);
+    exit();
+}
 
 
     public function export_excel()

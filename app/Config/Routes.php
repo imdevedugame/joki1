@@ -10,8 +10,10 @@ $routes->get('/', 'Home::index', ['filter' => 'auth']);
 
 $routes->get('login', 'AuthController::login');
 $routes->post('login', 'AuthController::login');
-$routes->get('register', 'AuthController::register');
+
+$routes->get('register', 'AuthController::registerForm');
 $routes->post('register', 'AuthController::register');
+
 $routes->get('home', 'Home::index');
 //$routes->get('profile', 'Home::profile');
 
@@ -60,6 +62,10 @@ $routes->resource('api', ['controller' => 'apiController']);
 
 $routes->get('invoice', 'TransaksiController::invoiceRedirect');
 $routes->get('invoice/(:num)', 'TransaksiController::invoice/$1');
+$routes->get('invoice-detail/(:num)', 'InvoiceController::show/$1');
+$routes->get('invoice-detail-pdf/(:num)', 'InvoiceController::print/$1');
+
+
 
 
 $routes->group('admin', ['namespace' => 'App\Controllers\Admin', 'filter' => 'auth'], function ($routes) {
@@ -68,7 +74,6 @@ $routes->group('admin', ['namespace' => 'App\Controllers\Admin', 'filter' => 'au
     $routes->post('kategori/edit/(:num)', 'KategoriController::edit/$1');
     $routes->get('kategori/delete/(:num)', 'KategoriController::delete/$1');
 });
-
 
 
 // Dashboard
@@ -119,3 +124,5 @@ $routes->get('admin/laporan', 'LaporanController::laporanGlobal', ['namespace' =
 $routes->post('buy', 'CheckoutController::buy');
 $routes->get('checkout/success', 'CheckoutController::success');
 $routes->post('upload-bukti/(:num)', 'TransaksiController::uploadBuktiPembayaran/$1');
+
+$routes->post('kontak/kirim', 'KontakController::kirim');

@@ -72,8 +72,10 @@
             </tr>
         </tfoot>
     </table>
+<a href="<?= base_url('invoice-detail-pdf/' . $transaction['id']) ?>" class="btn btn-danger" target="_blank">
+    Unduh PDF
+</a>
 
-    <button onclick="window.print()" class="btn btn-primary">Cetak Invoice</button>
 </div>
 
 <?= $this->endSection() ?>

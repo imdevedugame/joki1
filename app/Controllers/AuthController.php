@@ -6,7 +6,7 @@ use App\Models\UserModel;
 use App\Controllers\BaseController;
 use CodeIgniter\HTTP\ResponseInterface;
 use League\OAuth2\Client\Provider\Google;
-
+use CodeIgniter\I18n\Time;
 class AuthController extends BaseController
 {
     protected $user;
@@ -94,39 +94,47 @@ class AuthController extends BaseController
         }
 
         return view('v_login');
+    }public function registerForm()
+{
+    return view('register');
+}
+
+
+public function register()
+{
+    $validation = \Config\Services::validation();
+
+    $rules = [
+        'name'         => 'required',
+        'email'        => 'required|valid_email|is_unique[user.email]',
+        'username'     => 'required|is_unique[user.username]',
+        'password'     => 'required|min_length[6]',
+        'confpassword' => 'required|matches[password]'
+    ];
+
+    if (!$this->validate($rules)) {
+        return redirect()->back()->withInput()->with('error', implode("<br>", $validation->getErrors()));
     }
-    public function register()
-    {
-        if (session()->get('isLoggedIn')) {
-            return redirect()->to('home');
-        }
 
-        if ($this->request->getMethod() === 'post') {
-            $rules = [
-                'username' => 'required|min_length[4]|is_unique[user.username]',
-                'email' => 'required|valid_email|is_unique[user.email]',
-                'password' => 'required|min_length[6]',
-                'password_confirm' => 'required|matches[password]'
-            ];
+    $data = [
+        'username'   => $this->request->getPost('username'),
+        'email'      => $this->request->getPost('email'),
+        'password'   => password_hash($this->request->getPost('password'), PASSWORD_DEFAULT),
+        'role'       => 'guest', // default role
+        'created_at' => Time::now(),
+        'updated_at' => Time::now()
+    ];
 
-            if (!$this->validate($rules)) {
-                session()->setFlashdata('failed', $this->validator->listErrors());
-                return redirect()->back()->withInput();
-            }
-
-            $this->user->save([
-                'username' => $this->request->getVar('username'),
-                'email' => $this->request->getVar('email'),
-                'password' => password_hash($this->request->getVar('password'), PASSWORD_DEFAULT),
-                'role' => 'customer',
-                'created_at' => date('Y-m-d H:i:s')
-            ]);
-
-            return redirect()->to('login')->with('success', 'Registrasi berhasil, silakan login!');
-        }
-
-        return view('v_register');
+    // Jika kamu ingin menyimpan juga 'name', pastikan kolom 'name' tersedia di tabel user
+    if ($this->request->getPost('name')) {
+        $data['name'] = $this->request->getPost('name');
     }
+
+    $userModel = new \App\Models\UserModel();
+    $userModel->insert($data);
+
+    return redirect()->to('login')->with('success', 'Akun berhasil dibuat!');
+}
 
 
 
@@ -135,4 +143,5 @@ class AuthController extends BaseController
         session()->destroy();
         return redirect()->to('login');
     }
+    
 }
