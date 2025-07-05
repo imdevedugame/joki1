@@ -70,7 +70,7 @@
             </div>
             <div class="col-lg-6">
                 <div class="hero-image text-center">
-                    <img src="<?= base_url('NiceAdmin/assets/img/hero-shopping.png') ?>" alt="Shopping" class="img-fluid" style="max-height: 500px;">
+                    <img src="<?= base_url('img/hero-shopping.png') ?>" alt="Shopping" class="img-fluid" style="max-height: 500px;">
                 </div>
             </div>
         </div>
