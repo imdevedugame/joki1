@@ -9,37 +9,46 @@
 <?php } ?>
 
 <!-- Navbar -->
-<nav class="navbar navbar-expand-lg navbar-dark bg-primary fixed-top">
+<nav class="navbar navbar-expand-lg navbar-dark bg-white fixed-top">
     <div class="container">
-        <a class="navbar-brand fw-bold" href="#home">
-            <i class="bi bi-shop"></i> Blangkis Store
-        </a>
+      <a href="index.html" class="logo d-flex align-items-center nav-link">
+    <img src="<?= base_url() ?>NiceAdmin/assets/img/logo_blangkon.jpg" alt="" style="height: 30px; width: auto;">
+    <span class="d-none d-lg-block ms-2">Blangkis Store</span>
+  </a>
+     </a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav ms-auto">
-                <li class="nav-item">
-                    <a class="nav-link" href="#home">Beranda</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#about">Tentang</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#products">Produk</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#contact">Kontak</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="<?= base_url('keranjang') ?>">
-                        <i class="bi bi-cart"></i> Keranjang
-                    </a>
-                </li>
-            </ul>
-        </div>
+    <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+        <li class="nav-item">
+            <a class="nav-link text-primary" href="#home">Beranda</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link text-primary" href="#about">Tentang</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link text-primary" href="#products">Produk</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link text-primary" href="#contact">Kontak</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link text-primary" href="<?= base_url('login') ?>">
+                <i class="bi bi-box-arrow-in-right"></i> Login
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link text-primary" href="<?= base_url('register') ?>">
+                <i class="bi bi-person-plus"></i> Register
+            </a>
+        </li>
+    </ul>
+</div>
+
     </div>
 </nav>
+
 
 <!-- Hero Section -->
 <section id="home" class="hero-section bg-gradient-primary text-white" style="padding-top: 100px; min-height: 100vh; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
