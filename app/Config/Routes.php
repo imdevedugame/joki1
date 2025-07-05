@@ -6,7 +6,14 @@ use CodeIgniter\Router\RouteCollection;
  * @var RouteCollection $routes
  */
 
-$routes->get('/', 'Home::index', ['filter' => 'auth']);
+$routes->get('/', 'Beranda::index');
+$routes->group('account', ['filter' => 'auth'], function ($routes) {
+    $routes->get('', 'Account::index');
+    $routes->post('update-username', 'Account::updateUsername');
+    $routes->post('update-password', 'Account::updatePassword');
+});
+$routes->post('account/update-avatar', 'Account::updateAvatar', ['filter' => 'auth']);
+
 
 $routes->get('login', 'AuthController::login');
 $routes->post('login', 'AuthController::login');

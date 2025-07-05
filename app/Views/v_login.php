@@ -59,10 +59,17 @@ $password = [
                         </div>
 
                         <div class="col-12">
-                            <label for="yourPassword" class="form-label">Password</label>
-                            <?= form_password($password) ?>
-                            <div class="invalid-feedback">Please enter your password!</div>
-                        </div>
+    <label for="yourPassword" class="form-label">Password</label>
+    <div class="input-group">
+        <input type="password" name="password" id="passwordInput" class="form-control" required>
+        <button type="button" class="btn btn-outline-secondary" id="togglePassword">
+            <i class="bi bi-eye-slash" id="togglePasswordIcon"></i>
+        </button>
+    </div>
+    <div class="invalid-feedback">Please enter your password!</div>
+</div>
+
+
                         <div class="col-12">
                             <?= form_submit('submit', 'Login', ['class' => 'btn btn-primary w-100']) ?>
                         </div>
@@ -108,6 +115,25 @@ $password = [
 
 <!-- Template Main JS File -->
 <script src="assets/js/main.js"></script>
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const togglePassword = document.getElementById("togglePassword");
+    const passwordInput = document.getElementById("passwordInput");
+    const toggleIcon = document.getElementById("togglePasswordIcon");
+
+    if (togglePassword && passwordInput && toggleIcon) {
+      togglePassword.addEventListener("click", function () {
+        const type = passwordInput.getAttribute("type") === "password" ? "text" : "password";
+        passwordInput.setAttribute("type", type);
+
+        // Toggle icon class
+        toggleIcon.classList.toggle("bi-eye");
+        toggleIcon.classList.toggle("bi-eye-slash");
+      });
+    }
+  });
+</script>
+
 
 </body>
 <?= $this->endSection() ?>

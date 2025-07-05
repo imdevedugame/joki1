@@ -32,27 +32,32 @@ class LaporanPeriodikController extends BaseController
         ]);
     }
 
-    public function filter()
-    {
-        $tanggal_awal = $this->request->getPost('tanggal_awal');
-        $tanggal_akhir = $this->request->getPost('tanggal_akhir');
+ public function filter()
+{
+    $tanggal_awal = $this->request->getPost('tanggal_awal');
+    $tanggal_akhir = $this->request->getPost('tanggal_akhir');
 
-        // Validasi tanggal kosong
-        if (!$tanggal_awal || !$tanggal_akhir) {
-            return redirect()->back()->with('error', 'Tanggal awal dan akhir wajib diisi.');
-        }
-
-        $data = $this->transaksiModel
-            ->where('created_at >=', $tanggal_awal)
-            ->where('created_at <=', $tanggal_akhir)
-            ->findAll();
-
-        return view('admin/v_laporan_periodik', [
-            'laporan' => $data,
-            'tanggal_awal' => $tanggal_awal,
-            'tanggal_akhir' => $tanggal_akhir
-        ]);
+    // Validasi tanggal kosong
+    if (!$tanggal_awal || !$tanggal_akhir) {
+        return redirect()->back()->with('error', 'Tanggal awal dan akhir wajib diisi.');
     }
+
+    $data = $this->transaksiModel
+        ->where('created_at >=', $tanggal_awal)
+        ->where('created_at <=', $tanggal_akhir)
+        ->findAll();
+
+    // Hitung total seluruh penjualan
+    $total_semua = array_sum(array_column($data, 'total_harga'));
+
+    return view('admin/v_laporan_periodik', [
+        'laporan' => $data,
+        'tanggal_awal' => $tanggal_awal,
+        'tanggal_akhir' => $tanggal_akhir,
+        'total_semua' => $total_semua // ✅ kirim ke view
+    ]);
+}
+
 public function export_pdf()
 {
     $awal = $this->request->getGet('tanggal_awal');
@@ -62,20 +67,23 @@ public function export_pdf()
         ->where('created_at >=', $awal)
         ->where('created_at <=', $akhir)
         ->findAll();
+$totalSemua = 0;
+foreach ($data as &$row) {
+    $jumlah = $this->detailModel
+        ->where('transaction_id', $row['id'])
+        ->selectSum('jumlah')
+        ->first();
+    $row['jumlah_barang'] = $jumlah['jumlah'] ?? 0;
 
-    foreach ($data as &$row) {
-        $jumlah = $this->detailModel
-            ->where('transaction_id', $row['id'])
-            ->selectSum('jumlah')
-            ->first();
-        $row['jumlah_barang'] = $jumlah['jumlah'] ?? 0;
-    }
+    $totalSemua += $row['total_harga'];
+}
+$html = view('admin/v_laporan_periodik_pdf', [
+    'laporan' => $data,
+    'awal' => $awal,
+    'akhir' => $akhir,
+    'total_semua' => $totalSemua
+]);
 
-    $html = view('admin/v_laporan_periodik_pdf', [
-        'laporan' => $data,
-        'awal' => $awal,
-        'akhir' => $akhir
-    ]);
 
     $dompdf = new \Dompdf\Dompdf();
     $dompdf->loadHtml($html);

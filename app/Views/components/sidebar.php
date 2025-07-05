@@ -4,12 +4,21 @@
     <ul class="sidebar-nav" id="sidebar-nav">
 
         <!-- Menu Umum - Semua Role -->
-        <li class="nav-item">
+              <li class="nav-item">
+    <a class="nav-link <?= uri_string() == 'account' ? '' : 'collapsed' ?>" href="<?= base_url('account') ?>">
+        <i class="bi bi-person"></i>
+        <span>Akun Saya</span>
+    </a>
+</li>
+
+
+          <li class="nav-item">
             <a class="nav-link <?= uri_string() == 'profile' ? '' : 'collapsed' ?>" href="<?= base_url('profile') ?>">
-                <i class="bi bi-person"></i>
-                <span>Profile</span>
+                <i class="bi bi-clock-history"></i> <!-- icon bisa diganti sesuai preferensi -->
+        <span>History Transaksi</span>
             </a>
         </li>
+  
 
         <li class="nav-item">
             <a class="nav-link <?= uri_string() == 'contact' ? '' : 'collapsed' ?>" href="<?= base_url('contact') ?>">

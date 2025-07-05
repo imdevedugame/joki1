@@ -64,6 +64,11 @@
                         <td class="text-left"><?= esc($row['username']) ?></td>
                         <td><?= esc($row['jumlah_barang'] ?? 0) ?></td>
                         <td>Rp <?= number_format($row['total_harga'], 0, ',', '.') ?></td>
+                        <tr>
+    <td colspan="3"><strong>Total Keseluruhan</strong></td>
+    <td><strong><?= number_to_currency($total_semua, 'IDR') ?></strong></td>
+    <td></td>
+</tr>
                         <td>
                             <?php
                                 $status = 'Menunggu Pembayaran';

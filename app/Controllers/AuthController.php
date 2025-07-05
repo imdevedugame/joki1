@@ -47,11 +47,12 @@ class AuthController extends BaseController
         $userData = $googleUser->toArray();
 
         // Lakukan pengecekan user di DB, simpan session login
-        session()->set([
-            'isLoggedIn' => true,
-            'username' => $userData['email'],
-            'name' => $userData['name'],
-        ]);
+       session()->set([
+    'id'       => $user['id'],
+    'username' => $user['username'],
+    'email'    => $user['email'],
+    'isLoggedIn' => true
+]);
 
         return redirect()->to('/');
     }
@@ -61,7 +62,7 @@ class AuthController extends BaseController
         if ($this->request->getPost()) {
             $rules = [
                 'username' => 'required|min_length[6]',
-                'password' => 'required|min_length[7]|numeric',
+              'password' => 'required|min_length[6]',
             ];
 
             if ($this->validate($rules)) {
@@ -72,11 +73,14 @@ class AuthController extends BaseController
 
                 if ($dataUser) {
                     if (password_verify($password, $dataUser['password'])) {
-                        session()->set([
-                            'username' => $dataUser['username'],
-                            'role' => $dataUser['role'],
-                            'isLoggedIn' => TRUE
-                        ]);
+                       session()->set([
+    'id'        => $dataUser['id'],         // tambahkan ID user
+    'username'  => $dataUser['username'],
+    'email'     => $dataUser['email'],      // tambahkan email user
+    'role'      => $dataUser['role'],
+      'avatar' => $dataUser['avatar'],
+    'isLoggedIn'=> true
+]);
 
                         return redirect()->to(base_url('home'));
                     } else {
